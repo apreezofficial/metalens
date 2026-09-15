@@ -11,7 +11,7 @@ export function detectKind(file: File): MediaKind | null {
   return null;
 }
 
-export function createPreviewUrl(file: File, kind: MediaKind): string {
+export function createPreviewUrl(file: File): string {
   return URL.createObjectURL(file);
 }
 

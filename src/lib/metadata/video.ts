@@ -62,15 +62,17 @@ function parseGpsFromTracks(tracks: TrackInfo[]): GpsCoordinates | null {
   return null;
 }
 
-let mediaInfoFactory: ((opts?: { format?: string; locateFile?: () => string }) => Promise<{
+type MediaInfoFactory = (opts?: { format?: string; locateFile?: () => string }) => Promise<{
   analyzeData: (size: number, readChunk: (size: number, offset: number) => Promise<Uint8Array>) => Promise<unknown>;
   close: () => void;
-}>) | null = null;
+}>;
+
+let mediaInfoFactory: MediaInfoFactory | null = null;
 
 async function getMediaInfo() {
   if (!mediaInfoFactory) {
     const mod = await import("mediainfo.js");
-    mediaInfoFactory = mod.default as typeof mediaInfoFactory;
+    mediaInfoFactory = mod.default as MediaInfoFactory;
   }
   const instance = await mediaInfoFactory!({
     format: "JSON",

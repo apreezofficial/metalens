@@ -31,7 +31,7 @@ export function MetaLensApp() {
       if (!kind) continue;
 
       const id = newId();
-      const previewUrl = createPreviewUrl(file, kind);
+      const previewUrl = createPreviewUrl(file);
       const base = {
         id,
         file,
