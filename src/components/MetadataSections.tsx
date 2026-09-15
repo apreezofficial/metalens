@@ -30,10 +30,11 @@ export function MetadataSections({ sections, loading, error }: Props) {
   if (!hasAnyData) {
     return (
       <div className="rounded-lg border border-border bg-card p-8 text-center">
-        <p className="font-medium text-foreground">No location/metadata data found</p>
+        <p className="font-medium text-foreground">No embedded metadata found</p>
         <p className="mt-2 text-sm text-muted">
-          This file may have been stripped of EXIF/XMP/IPTC or never contained embedded
-          metadata.
+          The file was read successfully, but it contains no EXIF, XMP, IPTC, or GPS tags.
+          Screenshots, edited exports, messaging apps, and many PNG files commonly remove
+          camera metadata.
         </p>
       </div>
     );

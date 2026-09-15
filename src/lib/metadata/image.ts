@@ -22,6 +22,13 @@ function fieldsFrom(
     .map(([k, label]) => ({ label, value: formatValue(obj[k]) }));
 }
 
+function allFieldsFrom(obj: Record<string, unknown>): { label: string; value: string }[] {
+  return Object.entries(obj)
+    .filter(([, value]) => value !== undefined && value !== null && value !== "")
+    .filter(([, value]) => !(value instanceof Uint8Array))
+    .map(([label, value]) => ({ label, value: formatValue(value) }));
+}
+
 export function extractGps(data: Record<string, unknown>): GpsCoordinates | null {
   if (typeof data.latitude === "number" && typeof data.longitude === "number") {
     return { latitude: data.latitude, longitude: data.longitude };
@@ -51,16 +58,25 @@ export async function extractImageMetadata(
   gps: GpsCoordinates | null;
   raw: Record<string, unknown>;
 }> {
-  const [exif, iptc, xmp, gpsBlock] = await Promise.all([
-    exifr.parse(file, { tiff: true, exif: true, ifd1: true }).catch(() => ({})),
-    exifr.parse(file, { iptc: true }).catch(() => ({})),
-    exifr.parse(file, { xmp: true }).catch(() => ({})),
+  const [parsed, gpsBlock] = await Promise.all([
+    exifr
+      .parse(file, {
+        tiff: true,
+        exif: true,
+        ifd1: true,
+        iptc: true,
+        xmp: true,
+        jfif: true,
+        ihdr: true,
+        mergeOutput: true,
+      })
+      .catch(() => ({})),
     exifr.gps(file).catch(() => null),
   ]);
 
-  const exifObj = (exif ?? {}) as Record<string, unknown>;
-  const iptcObj = (iptc ?? {}) as Record<string, unknown>;
-  const xmpObj = (xmp ?? {}) as Record<string, unknown>;
+  const exifObj = (parsed ?? {}) as Record<string, unknown>;
+  const iptcObj = exifObj;
+  const xmpObj = exifObj;
   const gpsObj = (gpsBlock ?? {}) as Record<string, unknown>;
 
   const merged: Record<string, unknown> = {
@@ -128,6 +144,9 @@ export async function extractImageMetadata(
       ColorSpace: "Color space",
     }),
   ];
+  const allFields = allFieldsFrom(merged).filter(
+    ({ label }) => !fileFields.some((field) => field.label === label)
+  );
 
   const sections: MetadataSection[] = [
     {
@@ -159,6 +178,12 @@ export async function extractImageMetadata(
       title: "File Info",
       fields: fileFields,
       empty: false,
+    },
+    {
+      id: "detected",
+      title: "All Detected Tags",
+      fields: allFields,
+      empty: allFields.length === 0,
     },
   ];
 
