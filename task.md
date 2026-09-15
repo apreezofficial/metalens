@@ -32,4 +32,6 @@
 - [ ] Test image upload + EXIF extraction
 - [ ] Test video upload + mediainfo extraction
 - [ ] Test export JSON/PDF
-- [ ] Te
+- [ ] Test multi-file sidebar navigation
+
+> Run locally: `npm install` then `npm run dev` — complete Phase 6 checks in the browser.
