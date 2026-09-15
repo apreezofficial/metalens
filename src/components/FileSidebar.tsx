@@ -2,6 +2,7 @@
 
 import type { MediaFileItem } from "@/lib/types";
 import { formatBytes } from "@/lib/format";
+import { Film, Image as ImageIcon, X } from "lucide-react";
 
 type Props = {
   items: MediaFileItem[];
@@ -30,7 +31,7 @@ export function FileSidebar({ items, activeId, onSelect, onRemove }: Props) {
                   : "border-border bg-card hover:border-zinc-600"
               }`}
             >
-              <div className="h-10 w-10 shrink-0 overflow-hidden rounded bg-zinc-900">
+              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded bg-zinc-900">
                 {item.kind === "image" ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -45,6 +46,9 @@ export function FileSidebar({ items, activeId, onSelect, onRemove }: Props) {
                     muted
                   />
                 )}
+                <span className="absolute bottom-0 left-0 bg-black/70 p-0.5 text-white">
+                  {item.kind === "image" ? <ImageIcon size={11} aria-hidden="true" /> : <Film size={11} aria-hidden="true" />}
+                </span>
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{item.name}</p>
@@ -69,7 +73,7 @@ export function FileSidebar({ items, activeId, onSelect, onRemove }: Props) {
                 className="shrink-0 rounded p-1 text-xs text-muted opacity-0 transition-opacity hover:bg-zinc-800 hover:text-foreground group-hover:opacity-100"
                 aria-label={`Remove ${item.name}`}
               >
-                ×
+                <X size={15} aria-hidden="true" />
               </span>
             </button>
           </li>

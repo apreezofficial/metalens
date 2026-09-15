@@ -1,5 +1,6 @@
 import type { GpsCoordinates, MetadataSection } from "@/lib/types";
 import { formatBytes, formatValue } from "@/lib/format";
+import { hasAiGeneratedMarker } from "./ai";
 
 type TrackInfo = {
   "@type"?: string;
@@ -160,6 +161,7 @@ export async function extractVideoMetadata(
       { label: "File name", value: file.name },
       { label: "MIME type", value: file.type || "unknown" },
       { label: "File size", value: formatBytes(file.size) },
+      { label: "AI generated", value: hasAiGeneratedMarker(flat) ? "Yes" : "No" },
       general.Duration && { label: "Duration", value: formatValue(general.Duration) },
       general.Format && { label: "Container", value: formatValue(general.Format) },
       general.OverallBitRate && {

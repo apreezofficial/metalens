@@ -1,6 +1,7 @@
 import exifr from "exifr";
 import type { GpsCoordinates, MetadataSection } from "@/lib/types";
 import { dmsToDecimal, formatBytes, formatValue } from "@/lib/format";
+import { hasAiGeneratedMarker } from "./ai";
 
 function pick(
   obj: Record<string, unknown>,
@@ -138,6 +139,7 @@ export async function extractImageMetadata(
     { label: "File name", value: file.name },
     { label: "MIME type", value: file.type || "unknown" },
     { label: "File size", value: formatBytes(file.size) },
+    { label: "AI generated", value: hasAiGeneratedMarker(merged) ? "Yes" : "No" },
     ...fieldsFrom(merged, {
       ImageWidth: "Image width",
       ImageHeight: "Image height",

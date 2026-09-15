@@ -1,6 +1,16 @@
 "use client";
 
 import type { MetadataSection } from "@/lib/types";
+import { AlertTriangle, Camera, Clock3, FileText, LoaderCircle, MapPin, SlidersHorizontal, Tags } from "lucide-react";
+
+const sectionIcons = {
+  "Device Info": Camera,
+  "Capture Settings": SlidersHorizontal,
+  Location: MapPin,
+  Timestamps: Clock3,
+  "File Info": FileText,
+  "All Detected Tags": Tags,
+} as const;
 
 type Props = {
   sections: MetadataSection[];
@@ -12,7 +22,10 @@ export function MetadataSections({ sections, loading, error }: Props) {
   if (loading) {
     return (
       <div className="rounded-lg border border-border bg-card p-8 text-center text-muted">
-        Extracting metadata…
+        <span className="inline-flex items-center gap-2">
+          <LoaderCircle size={16} className="animate-spin" aria-hidden="true" />
+          Extracting metadata…
+        </span>
       </div>
     );
   }
@@ -20,7 +33,10 @@ export function MetadataSections({ sections, loading, error }: Props) {
   if (error) {
     return (
       <div className="rounded-lg border border-red-900/50 bg-red-950/20 p-4 text-sm text-red-300">
-        {error}
+        <span className="inline-flex items-center gap-2">
+          <AlertTriangle size={16} aria-hidden="true" />
+          {error}
+        </span>
       </div>
     );
   }
@@ -47,7 +63,11 @@ export function MetadataSections({ sections, loading, error }: Props) {
           key={section.id}
           className="rounded-lg border border-border bg-card p-4"
         >
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted">
+            {(() => {
+              const Icon = sectionIcons[section.title as keyof typeof sectionIcons];
+              return Icon ? <Icon size={15} aria-hidden="true" /> : null;
+            })()}
             {section.title}
           </h3>
           {section.empty || section.fields.length === 0 ? (

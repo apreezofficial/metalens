@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { ACCEPTED_EXTENSIONS } from "@/lib/types";
+import { UploadCloud } from "lucide-react";
 
 type Props = {
   onFiles: (files: FileList | File[]) => void;
@@ -55,8 +56,8 @@ export function UploadZone({ onFiles, disabled }: Props) {
           e.target.value = "";
         }}
       />
-      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-zinc-800 text-2xl">
-        ↑
+      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-zinc-800 text-accent">
+        <UploadCloud size={25} strokeWidth={1.8} aria-hidden="true" />
       </div>
       <p className="text-lg font-medium text-foreground">
         Drop files here or click to browse
