@@ -52,7 +52,7 @@ export async function extractImageMetadata(
   raw: Record<string, unknown>;
 }> {
   const [exif, iptc, xmp, gpsBlock] = await Promise.all([
-    exifr.parse(file, { tiff: true, exif: true, ifd0: true, ifd1: true }).catch(() => ({})),
+    exifr.parse(file, { tiff: true, exif: true, ifd1: true }).catch(() => ({})),
     exifr.iptc(file).catch(() => ({})),
     exifr.xmp(file).catch(() => ({})),
     exifr.gps(file).catch(() => null),
