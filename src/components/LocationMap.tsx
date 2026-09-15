@@ -18,7 +18,6 @@ export function LocationMap({ gps }: Props) {
 
     (async () => {
       const L = (await import("leaflet")).default;
-      await import("leaflet/dist/leaflet.css");
 
       if (cancelled || !containerRef.current) return;
 
